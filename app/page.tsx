@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
+
 const risottoSteps = [
   ["Warm the stock","Pour the vegetable stock into a saucepan and bring it to a gentle simmer. Keep it warm over low heat.",300],
   ["Soften the aromatics","Heat olive oil in a wide pan. Add the onion with a pinch of salt and cook until soft and translucent.",300],
@@ -224,9 +225,9 @@ export default function Home(){
   useEffect(()=>{if(seconds===0&&running){setRunning(false);playTimerChime()}},[seconds,running]);
   const move=(n:number)=>{setStep(n);setSeconds(steps[n][2]);setRunning(false)};
   const choose=(id:string)=>{const next=recipes.find(r=>r.id===id)??recipes[0];setRecipeId(id);setStep(0);setSeconds(next.steps[0][2]);setChecked([]);setRunning(false);setTab("ingredients");setShowLibrary(false);window.scrollTo({top:0,behavior:"smooth"})};
-  const share=async()=>{const data={title:`Nebari Recipes — ${recipe.title}`,text:`Cook ${recipe.title} with me, one step at a time.`,url:window.location.href};if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(window.location.href);alert("Recipe link copied")}};
+  const share=async()=>{const data={title:`Kitchen Nebari — ${recipe.title}`,text:`Cook ${recipe.title} with me, one step at a time.`,url:window.location.href};if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(window.location.href);alert("Recipe link copied")}};
   return <main>
-    <header><button className="brand" onClick={()=>setShowLibrary(true)}><img src="/kitchen-nebari-mark.png" alt="" /><span>NEBARI<small>RECIPES</small></span></button><div className="header-actions"><div className="servings-picker" aria-label="Preferred serving size"><span>Serves</span>{([2,4,6] as ServingSize[]).map(size=><button key={size} className={servings===size?"selected":""} aria-pressed={servings===size} onClick={()=>setServings(size)}>{size}</button>)}</div><button onClick={()=>setShowLibrary(true)}>All recipes</button><button onClick={share}>↗ Share</button></div></header>
+    <header><button className="brand" onClick={()=>setShowLibrary(true)}><b>N</b><span>KITCHEN<small>NEBARI</small></span></button><div className="header-actions"><div className="servings-picker" aria-label="Preferred serving size"><span>Serves</span>{([2,4,6] as ServingSize[]).map(size=><button key={size} className={servings===size?"selected":""} aria-pressed={servings===size} onClick={()=>setServings(size)}>{size}</button>)}</div><button onClick={()=>setShowLibrary(true)}>All recipes</button><button onClick={share}>↗ Share</button></div></header>
     {showLibrary&&<section className="library"><div className="library-head"><p className="eyebrow">YOUR COOKBOOK</p><h2>What shall we cook?</h2><p>Choose a recipe for guided instructions and a timer at every important step.</p></div><div className="recipe-cards">{recipes.map((r,i)=><button key={r.id} onClick={()=>choose(r.id)}><span className={`card-art art-${i}`}>{r.symbol}</span><small>{r.tag}</small><h3>{r.title}</h3><p>{servingFacts(r.facts,servings)}</p><b>Cook this recipe　→</b></button>)}</div></section>}
     {!showLibrary&&<><section className="hero" id="top"><div><p className="eyebrow">{recipe.tag}</p><h1>{recipe.title}</h1><p className="intro">{recipe.intro}</p><p className="facts">{servingFacts(recipe.facts,servings)}</p></div><div className="art"><i>{recipe.symbol}</i></div></section>
     <nav><button className={tab==="ingredients"?"active":""} onClick={()=>setTab("ingredients")}>Ingredients　{checked.length}/{ingredients.length}</button><button className={tab==="cook"?"active":""} onClick={()=>setTab("cook")}>Cook mode　{step+1}/{steps.length}</button></nav>
@@ -236,6 +237,6 @@ export default function Home(){
       <div className="timer"><small>{seconds===0&&steps[step][2]?"TIMER FINISHED":"STEP TIMER"}</small>{steps[step][2]?<><strong aria-live="polite">{fmt(seconds)}</strong><div><button className="gold" onClick={()=>{if(seconds===0)setSeconds(steps[step][2]);if(!running)unlockTimerSound();setRunning(!running)}}>{running?"Ⅱ Pause":"▶ Start timer"}</button><button onClick={()=>setSeconds(v=>v+60)}>+ 1 min</button></div><button className="reset" onClick={()=>{setSeconds(steps[step][2]);setRunning(false)}}>Reset timer</button></>:<strong className="ready">Ready to eat</strong>}</div></div>
       <div className="next"><button disabled={!step} onClick={()=>move(step-1)}>← Previous</button><button className="primary" disabled={step===steps.length-1} onClick={()=>move(step+1)}>{step===steps.length-1?"Recipe complete":"Next step　→"}</button></div>
     </section>}</>}
-    <footer>NEBARI RECIPES<p>Cook with confidence. One step at a time.</p></footer>
+    <footer>KITCHEN NEBARI <p>Cook with confidence. One step at a time.</p></footer>
   </main>
 }
